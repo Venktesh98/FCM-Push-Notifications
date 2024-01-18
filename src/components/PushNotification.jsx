@@ -6,7 +6,9 @@ import axios from "axios";
 const sendPushRequest = (payload) => {
   const headers = {
     "Content-Type": "application/json",
-    Authorization: process.env.NEXT_PUBLIC_SERVER_KEY,
+    Authorization:
+      "key=AAAAIZolUIE:APA91bE35sPRExQJ9nT9WzK4XPESnxsWGr-t1gBNvdH-tL3IxxUGko3aT8j793mlDBlsd52nZxC-v_tUpjbyAQ-ItZfdKn3Fm3P7j_RuVjG402-aowXFy4n_oUHpGpvntcoczsvLJU3L",
+    // Authorization: process.env.NEXT_PUBLIC_SERVER_KEY,
   };
 
   axios
