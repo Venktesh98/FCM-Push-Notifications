@@ -31,10 +31,9 @@
     "screenshots": [
         {
           "src": "/icon-512x512.png",
-          "sizes": "640x320",
-          "type": "image/png",
-          "form_factor": "wide",
-          "label": "Wonder Widgets"
+          "sizes": "400x822", 
+          "type": "image/png", 
+          "form_factor": "narrow"
         }
     ]
 }
