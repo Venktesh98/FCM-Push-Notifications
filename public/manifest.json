@@ -4,8 +4,8 @@
     "display": "standalone",
     "scope": "/",
     "start_url": "/",
-    "name": "PWA 2.0",
-    "short_name": "pwa-2.0",
+    "name": "FCM_PWA",
+    "short_name": "fcm_pwa",
     "icons": [
         {
             "src": "/icon-192x192.png",
@@ -26,14 +26,6 @@
             "src": "/icon-512x512.png",
             "sizes": "512x512",
             "type": "image/png"
-        }
-    ],
-    "screenshots": [
-        {
-          "src": "/icon-512x512.png",
-          "sizes": "400x822", 
-          "type": "image/png", 
-          "form_factor": "narrow"
         }
     ]
 }
