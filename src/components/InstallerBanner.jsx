@@ -10,21 +10,14 @@ function InstallBanner() {
       // Check if the app is eligible for installation
       console.log("In checking eligibility prompt");
 
-      if (window.hasOwnProperty("beforeinstallprompt")) {
-        console.log("In checking eligibility prompt inside if");
-        setShowBanner(true);
-        // Add event listener for deferred prompt (optional)
-        window.addEventListener("beforeinstallprompt", handleInstallPrompt);
-      } else {
-        console.log("In checking eligibility prompt inside else");
-        setShowBanner(false);
-      }
+      window.addEventListener("beforeinstallprompt", handleInstallPrompt);
+
+      return () => {
+        window.removeEventListener("beforeinstallprompt", handleInstallPrompt);
+      };
     };
 
     handleEligibilityChange();
-
-    return () =>
-      window.removeEventListener("beforeinstallprompt", handleInstallPrompt);
   }, []);
 
   const handleDismiss = () => {
@@ -34,6 +27,7 @@ function InstallBanner() {
   const handleInstallPrompt = (event) => {
     console.log("In install prompt");
     event.preventDefault();
+    setShowBanner(true);
     // Store the event for later prompt
     window.deferredPrompt = event;
   };
@@ -55,7 +49,7 @@ function InstallBanner() {
     }
   };
 
-  console.log("Baaner value:", showBanner);
+  console.log("Banner value:", showBanner);
 
   return showBanner ? (
     <div className="install-banner">
