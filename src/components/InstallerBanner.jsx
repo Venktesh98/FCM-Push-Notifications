@@ -4,32 +4,39 @@ import React, { useState, useEffect } from "react";
 
 function InstallBanner() {
   const [showBanner, setShowBanner] = useState(false);
+  const [componentMounted, setComponentMounted] = useState(false);
 
   useEffect(() => {
-    const handleEligibilityChange = () => {
-      // Check if the app is eligible for installation
-      console.log("In checking eligibility prompt");
-
-      window.addEventListener("beforeinstallprompt", handleInstallPrompt);
-
-      return () => {
-        window.removeEventListener("beforeinstallprompt", handleInstallPrompt);
-      };
+    const handleInstallPrompt = (event) => {
+      console.log("In install prompt");
+      // event.preventDefault();
+      setShowBanner(true);
+      // Store the event for later prompt
+      window.deferredPrompt = event;
     };
 
-    handleEligibilityChange();
+    console.log("In checking eligibility prompt");
+
+    window.addEventListener("beforeinstallprompt", handleInstallPrompt);
+
+    setComponentMounted(true);
+
+    return () => {
+      window.removeEventListener("beforeinstallprompt", handleInstallPrompt);
+    };
   }, []);
+
+  useEffect(() => {
+    if (componentMounted) {
+      // Logic to execute when the component mounts
+      console.log("Component mounted. Do something here if needed.");
+      // Call handleInstall function here if you want it to be executed on mount
+      handleInstall();
+    }
+  }, [componentMounted]);
 
   const handleDismiss = () => {
     setShowBanner(false);
-  };
-
-  const handleInstallPrompt = (event) => {
-    console.log("In install prompt");
-    // event.preventDefault();
-    setShowBanner(true);
-    // Store the event for later prompt
-    window.deferredPrompt = event;
   };
 
   const handleInstall = () => {
