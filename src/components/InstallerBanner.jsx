@@ -1,42 +1,78 @@
-import { useDeferredValue } from "next/dynamic";
+// var deferredPrompt;
 
-function InstallBanner() {
-  const deferredPrompt = useDeferredValue(() =>
-    window.matchMedia("(display-mode: standalone)").matches ? null : undefined
-  );
+// window.addEventListener("beforeinstallprompt", function (e) {
+//   console.log("beforeinstallprompt Event fired");
+//   e.preventDefault();
 
-  useEffect(() => {
-    if (deferredPrompt) {
-      const handleBeforeInstallPrompt = (event) => {
-        event.preventDefault();
-        setInstallPrompt(event);
-      };
+//   // Stash the event so it can be triggered later.
+//   deferredPrompt = e;
 
-      window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+//   return false;
+// });
 
-      return () =>
-        window.removeEventListener(
-          "beforeinstallprompt",
-          handleBeforeInstallPrompt
-        );
-    }
-  }, [deferredPrompt]);
+// btnSave.addEventListener("click", function () {
+//   if (deferredPrompt !== undefined) {
+//     // The user has had a postive interaction with our app and Chrome
+//     // has tried to prompt previously, so let's show the prompt.
+//     deferredPrompt.prompt();
 
-  const [installPrompt, setInstallPrompt] = useState(null);
+//     // Follow what the user has done with the prompt.
+//     deferredPrompt.userChoice.then(function (choiceResult) {
+//       console.log(choiceResult.outcome);
 
-  const handleClickInstall = () => {
-    if (installPrompt) {
-      installPrompt.prompt();
+//       if (choiceResult.outcome == "dismissed") {
+//         console.log("User cancelled home screen install");
+//       } else {
+//         console.log("User added to home screen");
+//       }
+
+//       // We no longer need the prompt.  Clear it up.
+//       deferredPrompt = null;
+//     });
+//   }
+// });
+
+import React from "react";
+
+const InstallerBanner = () => {
+  var deferredPrompt;
+
+  window.addEventListener("beforeinstallprompt", function (e) {
+    console.log("beforeinstallprompt Event fired");
+    e.preventDefault();
+
+    // Stash the event so it can be triggered later.
+    deferredPrompt = e;
+
+    return false;
+  });
+
+  const handleInstallBanner = () => {
+    if (deferredPrompt !== undefined) {
+      // The user has had a postive interaction with our app and Chrome
+      // has tried to prompt previously, so let's show the prompt.
+      deferredPrompt.prompt();
+
+      // Follow what the user has done with the prompt.
+      deferredPrompt.userChoice.then(function (choiceResult) {
+        console.log(choiceResult.outcome);
+
+        if (choiceResult.outcome == "dismissed") {
+          console.log("User cancelled home screen install");
+        } else {
+          console.log("User added to home screen");
+        }
+
+        // We no longer need the prompt.  Clear it up.
+        deferredPrompt = null;
+      });
     }
   };
-
   return (
-    <div className="install-banner">
-      <h2>Install App</h2>
-      <p>Click "Install" to add this app to your home screen.</p>
-      <button onClick={handleClickInstall}>Install</button>
+    <div>
+      <button onClick={handleInstallBanner}>Click for the banner</button>
     </div>
   );
-}
+};
 
-export default InstallBanner;
+export default InstallerBanner;
