@@ -26,7 +26,7 @@ function InstallBanner() {
 
   const handleInstallPrompt = (event) => {
     console.log("In install prompt");
-    event.preventDefault();
+    // event.preventDefault();
     setShowBanner(true);
     // Store the event for later prompt
     window.deferredPrompt = event;
