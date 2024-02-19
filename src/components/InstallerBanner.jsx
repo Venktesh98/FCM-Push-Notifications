@@ -1,6 +1,7 @@
 // components/InstallBanner.js
 
 import React, { useState, useEffect } from "react";
+import styles from "../styles/Home.module.css";
 
 function InstallBanner() {
   const [showBanner, setShowBanner] = useState(false);
@@ -68,15 +69,25 @@ function InstallBanner() {
 
   setTimeout(() => {
     setShowBanner(false);
-  }, 3000);
+  }, 4000);
 
   console.log("Banner value:", showBanner);
 
   return showBanner ? (
-    <div className="install-banner">
-      <p>Install this app for offline access, faster loading, and more!</p>
-      <button onClick={handleDismiss}>Close</button>
-      <button onClick={handleInstall}>Install</button>
+    <div className={styles.installBannerContainer}>
+      <div className={styles.installBanner}>
+        <div>
+          <img src="/favicon.ico" alt="No Image" width={40} height={40} />
+        </div>
+
+        <div className={styles.subBody}>
+          <div>Install FCM</div>
+          <div className={styles.link}>www.google.com</div>
+        </div>
+      </div>
+      <div onClick={handleInstall} className={styles.installBtn}>
+        Install
+      </div>
     </div>
   ) : null;
 }
