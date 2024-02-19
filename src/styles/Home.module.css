@@ -214,16 +214,26 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 17%;
-  margin: 1% auto 0;
+  width: 90%; /* Adjusted width for mobile and iPad devices */
+  max-width: 300px; /* Added a max-width for larger screens */
+  margin: 2% auto;
   background-color: #4c4949;
   opacity: 0.6;
   border-radius: 6px;
   color: white;
   padding: 6px;
   position: absolute;
-  left: 40%;
+  left: 50%;
+  transform: translateX(-50%); /* Center the banner horizontally */
   z-index: 100;
+}
+
+/* Add a media query for iPad landscape mode */
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape) {
+  .installBannerContainer {
+    width: 60%; /* Adjusted width for iPad landscape mode */
+    max-width: 500px; /* Increased max-width for larger screens */
+  }
 }
 
 .installBanner {
