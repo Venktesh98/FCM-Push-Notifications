@@ -4,49 +4,59 @@ import React, { useState, useEffect } from "react";
 
 function InstallBanner() {
   const [showBanner, setShowBanner] = useState(false);
-  const [componentMounted, setComponentMounted] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
 
   useEffect(() => {
+    function isMobileDevice() {
+      return (
+        typeof window.orientation !== "undefined" ||
+        navigator.userAgent.indexOf("IEMobile") !== -1
+      );
+    }
+
     const handleInstallPrompt = (event) => {
-      console.log("In install prompt");
-      // event.preventDefault();
-      setShowBanner(true);
-      // Store the event for later prompt
-      window.deferredPrompt = event;
+      console.log("In install prompt", event);
+      event.preventDefault();
+
+      if (isMobileDevice()) {
+        setShowBanner(true);
+        // Store the event for later prompt
+        setDeferredPrompt(event);
+      }
+      //   window.deferredPrompt = event;
+    };
+
+    const hidePrompt = () => {
+      setShowBanner(false);
     };
 
     console.log("In checking eligibility prompt");
 
     window.addEventListener("beforeinstallprompt", handleInstallPrompt);
-
-    setComponentMounted(true);
+    window.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden") {
+        hidePrompt();
+      }
+    });
 
     return () => {
       window.removeEventListener("beforeinstallprompt", handleInstallPrompt);
+      window.removeEventListener("visibilitychange", () => {});
     };
   }, []);
-
-  useEffect(() => {
-    if (componentMounted) {
-      // Logic to execute when the component mounts
-      console.log("Component mounted. Do something here if needed.");
-      // Call handleInstall function here if you want it to be executed on mount
-      handleInstall();
-    }
-  }, [componentMounted]);
 
   const handleDismiss = () => {
     setShowBanner(false);
   };
 
   const handleInstall = () => {
-    console.log("In install function");
-    if (window.deferredPrompt) {
+    console.log("In install function:", deferredPrompt);
+    if (deferredPrompt) {
       console.log("In install function if...");
 
-      window.deferredPrompt.prompt();
+      deferredPrompt.prompt();
       // Optional: Track installation success/failure
-      window.deferredPrompt.userChoice.then((choice) => {
+      deferredPrompt.userChoice.then((choice) => {
         if (choice.outcome === "accepted") {
           console.log("PWA installed!");
         } else {
@@ -55,6 +65,10 @@ function InstallBanner() {
       });
     }
   };
+
+  setTimeout(() => {
+    setShowBanner(false);
+  }, 3000);
 
   console.log("Banner value:", showBanner);
 
