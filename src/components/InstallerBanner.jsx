@@ -6,32 +6,40 @@ import styles from "../styles/Home.module.css";
 function InstallBanner() {
   const [showBanner, setShowBanner] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
+  let timeoutId;
+
+  function isMobileDevice() {
+    return (
+      typeof window.orientation !== "undefined" ||
+      navigator.userAgent.indexOf("IEMobile") !== -1
+    );
+  }
 
   useEffect(() => {
-    function isMobileDevice() {
-      return (
-        typeof window.orientation !== "undefined" ||
-        navigator.userAgent.indexOf("IEMobile") !== -1
-      );
+    timeoutId = setTimeout(() => {
+      setShowBanner(false);
+    }, 4000);
+
+    if (isMobileDevice()) {
+      setShowBanner(true);
     }
 
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, []);
+
+  useEffect(() => {
     const handleInstallPrompt = (event) => {
-      console.log("In install prompt", event);
+      console.log("In install prompt");
       event.preventDefault();
 
-      if (isMobileDevice()) {
-        setShowBanner(true);
-        // Store the event for later prompt
-        setDeferredPrompt(event);
-      }
-      //   window.deferredPrompt = event;
+      setDeferredPrompt(event);
     };
 
     const hidePrompt = () => {
       setShowBanner(false);
     };
-
-    console.log("In checking eligibility prompt");
 
     window.addEventListener("beforeinstallprompt", handleInstallPrompt);
     window.addEventListener("visibilitychange", () => {
@@ -43,35 +51,16 @@ function InstallBanner() {
     return () => {
       window.removeEventListener("beforeinstallprompt", handleInstallPrompt);
       window.removeEventListener("visibilitychange", () => {});
+      clearTimeout(timeoutId);
     };
   }, []);
 
-  const handleDismiss = () => {
-    setShowBanner(false);
-  };
-
   const handleInstall = () => {
-    console.log("In install function:", deferredPrompt);
     if (deferredPrompt) {
-      console.log("In install function if...");
-
       deferredPrompt.prompt();
-      // Optional: Track installation success/failure
-      deferredPrompt.userChoice.then((choice) => {
-        if (choice.outcome === "accepted") {
-          console.log("PWA installed!");
-        } else {
-          console.log("PWA installation declined.");
-        }
-      });
+      setShowBanner(false);
     }
   };
-
-  setTimeout(() => {
-    setShowBanner(false);
-  }, 4000);
-
-  console.log("Banner value:", showBanner);
 
   return showBanner ? (
     <div className={styles.installBannerContainer}>
