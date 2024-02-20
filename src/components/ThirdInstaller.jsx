@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "../styles/Home.module.css";
 
-function InstallBanner() {
+function ThirdInstaller() {
   const [showBanner, setShowBanner] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   let timeoutId;
@@ -14,39 +14,33 @@ function InstallBanner() {
         /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i
       ) && navigator.userAgent.match(/Chrome|Firefox|Safari/i);
 
-    const isInstalledPWA = window.matchMedia(
-      "(display-mode: standalone)"
-    ).matches;
-
     timeoutId = setTimeout(() => {
       setShowBanner(false);
     }, 4000);
 
-    if (isMobileBrowser && !isInstalledPWA) {
-      const bannerShownBefore = localStorage.getItem("installBannerShown");
-      if (!bannerShownBefore) {
-        setShowBanner(true);
-      }
+    if (isMobileBrowser) {
+      // Check for beforeinstallprompt event
+      window.addEventListener("beforeinstallprompt", handleInstallPrompt);
     }
 
     return () => {
       clearTimeout(timeoutId);
+      window.removeEventListener("beforeinstallprompt", handleInstallPrompt);
     };
   }, []);
 
-  useEffect(() => {
-    const handleInstallPrompt = (event) => {
-      console.log("In install prompt");
-      event.preventDefault();
-      setDeferredPrompt(event);
-    };
+  const handleInstallPrompt = (event) => {
+    console.log("In install prompt");
+    event.preventDefault();
+    setDeferredPrompt(event);
+    setShowBanner(true);
+  };
 
+  useEffect(() => {
     const hidePrompt = () => {
       setShowBanner(false);
-      localStorage.setItem("installBannerShown", "true");
     };
 
-    window.addEventListener("beforeinstallprompt", handleInstallPrompt);
     window.addEventListener("visibilitychange", () => {
       if (document.visibilityState === "hidden") {
         hidePrompt();
@@ -54,7 +48,6 @@ function InstallBanner() {
     });
 
     return () => {
-      window.removeEventListener("beforeinstallprompt", handleInstallPrompt);
       window.removeEventListener("visibilitychange", () => {});
       clearTimeout(timeoutId);
     };
@@ -64,7 +57,6 @@ function InstallBanner() {
     if (deferredPrompt) {
       deferredPrompt.prompt();
       setShowBanner(false);
-      localStorage.setItem("installBannerShown", "true");
     }
   };
 
@@ -87,4 +79,4 @@ function InstallBanner() {
   ) : null;
 }
 
-export default InstallBanner;
+export default ThirdInstaller;
