@@ -8,25 +8,25 @@ function InstallBanner() {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   let timeoutId;
 
-  //   function isMobileDevice() {
-  //     return (
-  //       typeof window.orientation !== "undefined" ||
-  //       navigator.userAgent.indexOf("IEMobile") !== -1
-  //     );
-  //   }
-
   useEffect(() => {
     const isMobileBrowser =
       navigator.userAgent.match(
         /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i
       ) && navigator.userAgent.match(/Chrome|Firefox|Safari/i);
 
+    const isInstalledPWA = window.matchMedia(
+      "(display-mode: standalone)"
+    ).matches;
+
     timeoutId = setTimeout(() => {
       setShowBanner(false);
     }, 4000);
 
-    if (isMobileBrowser()) {
-      setShowBanner(true);
+    if (isMobileBrowser && !isInstalledPWA) {
+      const bannerShownBefore = localStorage.getItem("installBannerShown");
+      if (!bannerShownBefore) {
+        setShowBanner(true);
+      }
     }
 
     return () => {
@@ -38,12 +38,12 @@ function InstallBanner() {
     const handleInstallPrompt = (event) => {
       console.log("In install prompt");
       event.preventDefault();
-
       setDeferredPrompt(event);
     };
 
     const hidePrompt = () => {
       setShowBanner(false);
+      localStorage.setItem("installBannerShown", "true");
     };
 
     window.addEventListener("beforeinstallprompt", handleInstallPrompt);
@@ -64,6 +64,7 @@ function InstallBanner() {
     if (deferredPrompt) {
       deferredPrompt.prompt();
       setShowBanner(false);
+      localStorage.setItem("installBannerShown", "true");
     }
   };
 
