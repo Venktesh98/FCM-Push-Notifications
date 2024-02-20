@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styles from "../styles/Home.module.css"
+import styles from "../styles/Home.module.css";
 
 function NewInstallBanner() {
   const [showInstallButton, setShowInstallButton] = useState(false);
@@ -17,11 +17,11 @@ function NewInstallBanner() {
     window.addEventListener("beforeinstallprompt", (e) => {
       console.log("ever:", e);
       e.preventDefault(); // Prevent native banner
-    //   if (isMobileBrowser) {
+      if (isMobileBrowser) {
         setShowInstallButton(true);
         setInstallPrompt(e);
         // deferredPrompt = e;
-    //   }
+      }
     });
 
     // Check if app is already installed
@@ -32,6 +32,7 @@ function NewInstallBanner() {
 
   // Handle install button click
   const handleInstallClick = () => {
+    console.log("promt:", installPrompt);
     if (installPrompt) {
       installPrompt.prompt();
       installPrompt.userChoice.then((choiceResult) => {
@@ -48,23 +49,18 @@ function NewInstallBanner() {
     <div>
       {/* Your app content here */}
       {showInstallButton && !isAppInstalled && (
-        <div className={styles.installBannerContainer}>
-          <div className={styles.installBanner}>
-            <div>
-              <img src="/favicon.ico" alt="No Image" width={40} height={40} />
-            </div>
-
-            <div className={styles.subBody}>
-              <div>Install FCM</div>
-              <div className={styles.link}>www.google.com</div>
+        <>
+          <button onClick={handleInstallClick}>Install PWA</button>
+          <div className={styles.installBannerContainer}>
+            <div className={styles.installBanner}>
+              <div className={styles.subBody}>
+                <div>Install FCM</div>
+                <div className={styles.link}>www.google.com</div>
+              </div>
             </div>
           </div>
-          <div onClick={handleInstallClick} className={styles.installBtn}>
-            Install
-          </div>
-        </div>
+        </>
       )}
-      <h1>Install above</h1>
     </div>
   );
 }

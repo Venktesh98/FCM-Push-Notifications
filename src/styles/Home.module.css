@@ -223,8 +223,9 @@
   color: white;
   padding: 6px;
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%); /* Center the banner horizontally */
+  /* left: 50%; */
+  /* Center the banner horizontally */
+  /* transform: translateX(-50%);  */
   z-index: 100;
 }
 
