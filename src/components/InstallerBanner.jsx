@@ -6,6 +6,7 @@ import styles from "../styles/Home.module.css";
 function InstallBanner() {
   const [showBanner, setShowBanner] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [isAppInstalled, setIsAppInstalled] = useState(false);
   let timeoutId;
 
   function isMobileDevice() {
@@ -20,9 +21,9 @@ function InstallBanner() {
       setShowBanner(false);
     }, 4000);
 
-    if (isMobileDevice()) {
+    // if (isMobileDevice()) {
       setShowBanner(true);
-    }
+    // }
 
     return () => {
       clearTimeout(timeoutId);
@@ -33,12 +34,18 @@ function InstallBanner() {
     const handleInstallPrompt = (event) => {
       console.log("In install prompt");
       event.preventDefault();
-
       setDeferredPrompt(event);
     };
 
     const hidePrompt = () => {
       setShowBanner(false);
+    };
+
+    const checkIfAppIsInstalled = () => {
+      const isStandalone = window.matchMedia(
+        "(display-mode: standalone)"
+      ).matches;
+      setIsAppInstalled(isStandalone);
     };
 
     window.addEventListener("beforeinstallprompt", handleInstallPrompt);
@@ -47,6 +54,8 @@ function InstallBanner() {
         hidePrompt();
       }
     });
+
+    checkIfAppIsInstalled();
 
     return () => {
       window.removeEventListener("beforeinstallprompt", handleInstallPrompt);
@@ -58,11 +67,17 @@ function InstallBanner() {
   const handleInstall = () => {
     if (deferredPrompt) {
       deferredPrompt.prompt();
-      setShowBanner(false);
+      deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === "accepted") {
+          setIsAppInstalled(true);
+        }
+        setDeferredPrompt(null);
+        setShowBanner(false);
+      });
     }
   };
 
-  return showBanner ? (
+  return showBanner && !isAppInstalled ? (
     <div className={styles.installBannerContainer}>
       <div className={styles.installBanner}>
         <div>
