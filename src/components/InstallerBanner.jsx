@@ -8,19 +8,24 @@ function InstallBanner() {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   let timeoutId;
 
-  function isMobileDevice() {
-    return (
-      typeof window.orientation !== "undefined" ||
-      navigator.userAgent.indexOf("IEMobile") !== -1
-    );
-  }
+  //   function isMobileDevice() {
+  //     return (
+  //       typeof window.orientation !== "undefined" ||
+  //       navigator.userAgent.indexOf("IEMobile") !== -1
+  //     );
+  //   }
 
   useEffect(() => {
+    const isMobileBrowser =
+      navigator.userAgent.match(
+        /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i
+      ) && navigator.userAgent.match(/Chrome|Firefox|Safari/i);
+
     timeoutId = setTimeout(() => {
       setShowBanner(false);
     }, 4000);
 
-    if (isMobileDevice()) {
+    if (isMobileBrowser) {
       setShowBanner(true);
     }
 
