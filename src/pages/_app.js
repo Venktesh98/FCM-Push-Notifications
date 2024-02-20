@@ -5,8 +5,8 @@ import "@/styles/globals.css";
 export default function App({ Component, pageProps }) {
   return (
     <div>
-      {/* <InstallBanner /> */}
-      <NewInstallBanner />
+      <InstallBanner />
+      {/* <NewInstallBanner /> */}
       <Component {...pageProps} />
     </div>
   );

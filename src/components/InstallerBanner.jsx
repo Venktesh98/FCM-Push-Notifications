@@ -4,9 +4,8 @@ import React, { useState, useEffect } from "react";
 import styles from "../styles/Home.module.css";
 
 function InstallBanner() {
-  const [showBanner, setShowBanner] = useState(true);
+  const [showBanner, setShowBanner] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
-  const [isAppInstalled, setIsAppInstalled] = useState(false);
   let timeoutId;
 
   function isMobileDevice() {
@@ -16,48 +15,30 @@ function InstallBanner() {
     );
   }
 
-  //   useEffect(() => {
-  //     // window
-  //     //   .matchMedia("(display-mode: standalone)")
-  //     //   .addEventListener("change", (evt) => {
-  //     //     let displayMode = "browser";
-  //     //     if (evt.matches) {
-  //     //       displayMode = "standalone";
-  //     //     }
-  //     //     // Log display mode change to analytics
-  //     //     console.log("DISPLAY_MODE_CHANGED", displayMode);
-  //     //   });
+  useEffect(() => {
+    timeoutId = setTimeout(() => {
+      setShowBanner(false);
+    }, 4000);
 
-  //     timeoutId = setTimeout(() => {
-  //       setShowBanner(false);
-  //     }, 4000);
+    if (isMobileDevice()) {
+      setShowBanner(true);
+    }
 
-  //     // if (isMobileDevice()) {
-  //     setShowBanner(true);
-  //     // }
-
-  //     return () => {
-  //       clearTimeout(timeoutId);
-  //     };
-  //   }, []);
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, []);
 
   useEffect(() => {
     const handleInstallPrompt = (event) => {
       console.log("In install prompt");
       event.preventDefault();
+
       setDeferredPrompt(event);
     };
 
     const hidePrompt = () => {
       setShowBanner(false);
-    };
-
-    const checkIfAppIsInstalled = () => {
-      const isStandalone = window.matchMedia(
-        "(display-mode: standalone)"
-      ).matches;
-      console.log("isStandalone:", isStandalone);
-      setIsAppInstalled(isStandalone);
     };
 
     window.addEventListener("beforeinstallprompt", handleInstallPrompt);
@@ -66,8 +47,6 @@ function InstallBanner() {
         hidePrompt();
       }
     });
-
-    checkIfAppIsInstalled();
 
     return () => {
       window.removeEventListener("beforeinstallprompt", handleInstallPrompt);
@@ -79,17 +58,11 @@ function InstallBanner() {
   const handleInstall = () => {
     if (deferredPrompt) {
       deferredPrompt.prompt();
-      deferredPrompt.userChoice.then((choiceResult) => {
-        if (choiceResult.outcome === "accepted") {
-          setIsAppInstalled(true);
-        }
-        setDeferredPrompt(null);
-        setShowBanner(false);
-      });
+      setShowBanner(false);
     }
   };
 
-  return showBanner && !isAppInstalled ? (
+  return showBanner ? (
     <div className={styles.installBannerContainer}>
       <div className={styles.installBanner}>
         <div>
