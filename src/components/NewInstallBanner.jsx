@@ -3,6 +3,9 @@ import React, { useState, useEffect } from "react";
 function NewInstallBanner() {
   const [showInstallButton, setShowInstallButton] = useState(false);
   const [isAppInstalled, setIsAppInstalled] = useState(false);
+  const [installPrompt, setInstallPrompt] = useState(null);
+
+  let deferredPrompt;
 
   useEffect(() => {
     // Detect mobile browser
@@ -13,9 +16,12 @@ function NewInstallBanner() {
 
     // Handle beforeinstallprompt event
     window.addEventListener("beforeinstallprompt", (e) => {
+      console.log("ever:", e);
       e.preventDefault(); // Prevent native banner
       if (isMobileBrowser) {
         setShowInstallButton(true);
+        setInstallPrompt(e);
+        // deferredPrompt = e;
       }
     });
 
@@ -27,13 +33,14 @@ function NewInstallBanner() {
 
   // Handle install button click
   const handleInstallClick = () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      deferredPrompt.userChoice.then((choiceResult) => {
+    console.log("promt:", installPrompt);
+    if (installPrompt) {
+      installPrompt.prompt();
+      installPrompt.userChoice.then((choiceResult) => {
         if (choiceResult.outcome === "accepted") {
           setIsAppInstalled(true);
           localStorage.setItem("appInstalled", true);
-          deferredPrompt = null;
+          setInstallPrompt(null);
         }
       });
     }
