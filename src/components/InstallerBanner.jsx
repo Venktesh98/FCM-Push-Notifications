@@ -15,25 +15,25 @@ function InstallBanner() {
     );
   }
 
-//   useEffect(() => {
-//     timeoutId = setTimeout(() => {
-//       setShowBanner(false);
-//     }, 4000);
+  useEffect(() => {
+    timeoutId = setTimeout(() => {
+      setShowBanner(false);
+    }, 4000);
 
-//     if (isMobileDevice()) {
-//       setShowBanner(true);
-//     }
+    if (isMobileDevice()) {
+      setShowBanner(true);
+    }
 
-//     return () => {
-//       clearTimeout(timeoutId);
-//     };
-//   }, []);
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, []);
 
   useEffect(() => {
     const handleInstallPrompt = (event) => {
       console.log("In install prompt");
       event.preventDefault();
-      setShowBanner(true);
+
       setDeferredPrompt(event);
     };
 
