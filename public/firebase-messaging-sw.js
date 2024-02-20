@@ -26,3 +26,22 @@ messaging.onBackgroundMessage(function (payload) {
 
   self.registration.showNotification(notificationTitle, notificationOptions);
 });
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+
+  const urlToOpen = "https://fcm-push-notifications.vercel.app/";
+
+  event.waitUntil(
+    clients.matchAll({ type: "window" }).then((windowClients) => {
+      // Check if the dedicated page is already open, focus on it; otherwise, open a new window/tab
+      for (let i = 0; i < windowClients.length; i++) {
+        const client = windowClients[i];
+        if ("focus" in client) {
+          return client.focus();
+        }
+      }
+      return clients.openWindow(urlToOpen);
+    })
+  );
+});

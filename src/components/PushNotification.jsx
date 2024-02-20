@@ -91,6 +91,10 @@ function PushNotification() {
       notification: {
         body: "Thanks for subscribing",
         title: "PWA 2.0",
+        click_action: "FLUTTER_NOTIFICATION_CLICK",
+      },
+      data: {
+        url: "https://www.google.com",
       },
     };
     console.log("paylaod:", payload);
