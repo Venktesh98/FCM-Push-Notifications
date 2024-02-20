@@ -277,3 +277,7 @@
     transform: rotate(0deg);
   }
 }
+
+@media all and (display-mode: standalone) {
+  /* Here goes the CSS rules that will only apply if app is running standalone */
+}

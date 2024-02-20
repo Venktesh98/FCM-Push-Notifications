@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import styles from "../styles/Home.module.css";
 
 function InstallBanner() {
-  const [showBanner, setShowBanner] = useState(false);
+  const [showBanner, setShowBanner] = useState(true);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [isAppInstalled, setIsAppInstalled] = useState(false);
   let timeoutId;
@@ -16,19 +16,30 @@ function InstallBanner() {
     );
   }
 
-  useEffect(() => {
-    timeoutId = setTimeout(() => {
-      setShowBanner(false);
-    }, 4000);
+  //   useEffect(() => {
+  //     // window
+  //     //   .matchMedia("(display-mode: standalone)")
+  //     //   .addEventListener("change", (evt) => {
+  //     //     let displayMode = "browser";
+  //     //     if (evt.matches) {
+  //     //       displayMode = "standalone";
+  //     //     }
+  //     //     // Log display mode change to analytics
+  //     //     console.log("DISPLAY_MODE_CHANGED", displayMode);
+  //     //   });
 
-    // if (isMobileDevice()) {
-      setShowBanner(true);
-    // }
+  //     timeoutId = setTimeout(() => {
+  //       setShowBanner(false);
+  //     }, 4000);
 
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, []);
+  //     // if (isMobileDevice()) {
+  //     setShowBanner(true);
+  //     // }
+
+  //     return () => {
+  //       clearTimeout(timeoutId);
+  //     };
+  //   }, []);
 
   useEffect(() => {
     const handleInstallPrompt = (event) => {
@@ -45,6 +56,7 @@ function InstallBanner() {
       const isStandalone = window.matchMedia(
         "(display-mode: standalone)"
       ).matches;
+      console.log("isStandalone:", isStandalone);
       setIsAppInstalled(isStandalone);
     };
 
