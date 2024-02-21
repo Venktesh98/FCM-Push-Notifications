@@ -1,5 +1,3 @@
-// components/InstallBanner.js
-
 import React, { useState, useEffect } from "react";
 import styles from "../styles/Home.module.css";
 
@@ -14,17 +12,12 @@ function ThirdInstaller() {
         /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i
       ) && navigator.userAgent.match(/Chrome|Firefox|Safari/i);
 
-    timeoutId = setTimeout(() => {
-      setShowBanner(false);
-    }, 4000);
-
     if (isMobileBrowser) {
       // Check for beforeinstallprompt event
       window.addEventListener("beforeinstallprompt", handleInstallPrompt);
     }
 
     return () => {
-      clearTimeout(timeoutId);
       window.removeEventListener("beforeinstallprompt", handleInstallPrompt);
     };
   }, []);
@@ -36,27 +29,27 @@ function ThirdInstaller() {
     setShowBanner(true);
   };
 
-  useEffect(() => {
-    const hidePrompt = () => {
-      setShowBanner(false);
-    };
+//   useEffect(() => {
+//     const hidePrompt = () => {
+//       setShowBanner(false);
+//     };
 
-    window.addEventListener("visibilitychange", () => {
-      if (document.visibilityState === "hidden") {
-        hidePrompt();
-      }
-    });
+//     window.addEventListener("visibilitychange", () => {
+//       if (document.visibilityState === "hidden") {
+//         hidePrompt();
+//       }
+//     });
 
-    return () => {
-      window.removeEventListener("visibilitychange", () => {});
-      clearTimeout(timeoutId);
-    };
-  }, []);
+//     return () => {
+//       window.removeEventListener("visibilitychange", () => {});
+//       clearTimeout(timeoutId);
+//     };
+//   }, []);
 
   const handleInstall = () => {
     if (deferredPrompt) {
       deferredPrompt.prompt();
-      setShowBanner(false);
+    //   setShowBanner(false);
     }
   };
 
